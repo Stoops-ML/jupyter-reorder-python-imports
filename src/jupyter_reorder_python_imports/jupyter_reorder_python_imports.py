@@ -18,8 +18,6 @@ formatter = None
 
 
 class ReorderPythonImports:
-    """Formatter that stores config and call `black.format_cell`."""
-
     def __init__(
         self,
         ip: Ipt,
@@ -38,9 +36,8 @@ class ReorderPythonImports:
                 https://github.com/ipython/ipython/blob/77e188547e5705a0e960551519a851ac45db8bfc/IPython/core/display_functions.py#L88  # noqa
         Arguments:
             ip: ipython shell
-            is_lab: whether running in jupyterlab as opposed to ipython
-                notebook
-            black_config: Dictionary for black config options
+            is_lab: whether running in jupyterlab as opposed to ipython notebook
+            min_python_version: minimum python version for reorder-python-imports
         """
         self.shell = ip
         self.min_python_version = min_python_version
@@ -150,9 +147,6 @@ def load(
         lab: Whether this is a jupyterlab session
         line_length: preferred line length
         target_version: preferred python version
-        verbosity: logging verbosity
-        **black_config: Other arguments you want to pass to black. See:
-            https://github.com/psf/black/blob/911470a610e47d9da5ea938b0887c3df62819b85/src/black/mode.py#L99
     """
     global formatter
 

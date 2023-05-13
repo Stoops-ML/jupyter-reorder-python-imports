@@ -23,6 +23,7 @@ The latter method allows for specifying the minimum python version (as a tuple o
 ## TODO
 Contribution ideas:
 - [ ] Improve testing
+- [ ] Read configuration from pyproject.toml
 
 ## Acknowledgements
 Of course, thanks to the [reorder-python-imports](https://github.com/asottile/reorder-python-imports) and [jupyter](https://jupyter.org/) teams for their continued work that we all use!
