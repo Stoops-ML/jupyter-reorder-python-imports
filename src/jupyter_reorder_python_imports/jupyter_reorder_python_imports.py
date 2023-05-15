@@ -29,17 +29,15 @@ class ReorderPythonImports:
         Notes on the JavaScript stuff for notebook:
             - Requires:
                 - update=False for the `html` part
-            - Doesn't seem to matter:
-                - trailing semicolon
             - Other:
                 - Can use `jb_cells.find` instead of the for loop if you set the main function to `text/html` and set `raw=True`
             def display:
                 https://github.com/ipython/ipython/blob/77e188547e5705a0e960551519a851ac45db8bfc/IPython/core/display_functions.py#L88  # noqa
-        Arguments:
-            ip: ipython shell
-            is_lab: whether running in jupyterlab as opposed to ipython notebook
-            min_python_version: minimum python version for reorder-python-imports
+        :param t.Optional[Ipt] ip: iPython interpreter, defaults to None
+        :param bool lab: is session jupyterlab, defaults to True
+        :param t.Optional[t.Tuple[int]] min_python_version: minimum python version for reorder-python-imports, defaults to None
         """
+
         self.shell = ip
         self.min_python_version = min_python_version
         if self.min_python_version is None:
@@ -133,7 +131,8 @@ def load_ipython_extension(
     ip: Ipt,
 ) -> None:
     """Load the extension via `%load_ext jupyter_reorder_python_imports`.
-    https://ipython.readthedocs.io/en/stable/config/extensions/#writing-extensions  # noqa
+
+    :param Ipt ip: iPython interpreter
     """
     load(ip=ip)
 
@@ -143,13 +142,12 @@ def load(
     lab: bool = True,
     min_python_version: t.Optional[t.Tuple[int]] = None,
 ) -> None:
-    """Load the extension via `jupyter_reorder_python_imports.load`.
-    This allows passing in custom configuration.
-    Arguments:
-        ip: iPython interpreter -- you should be able to ignore this
-        lab: Whether this is a jupyterlab session
-        line_length: preferred line length
-        target_version: preferred python version
+    """Load the extension using `jupyter_reorder_python_imports.load()`.
+    This allows passing in custom configuration using input arguments.
+
+    :param t.Optional[Ipt] ip: iPython interpreter, defaults to None
+    :param bool lab: is session jupyterlab, defaults to True
+    :param t.Optional[t.Tuple[int]] min_python_version: minimum python version for reorder-python-imports, defaults to None
     """
     global formatter
 
@@ -166,8 +164,9 @@ def load(
 
 
 def unload_ipython_extension(ip: Ipt) -> None:
-    """Unload the extension.
-    https://ipython.readthedocs.io/en/stable/config/extensions/#writing-extensions
+    """Unload the extension
+
+    :param Ipt ip: iPython interpreter
     """
     global formatter
 
