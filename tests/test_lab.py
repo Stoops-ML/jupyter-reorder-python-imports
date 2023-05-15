@@ -21,6 +21,6 @@ def test_load_ext(lab: t.Callable[..., t.Dict[str, t.Any]]) -> None:
     ]
     output = lab(cells)
     cell_imports1 = source_from_cell(output, "imports1")
-    assert "".join(cell_imports1) == "import datetime\nimport re\n"
+    assert "".join(cell_imports1) == "import datetime\nimport re"
     cell_imports2 = source_from_cell(output, "imports2")
-    assert "".join(cell_imports2) == "import datetime\nimport re\n"
+    assert "".join(cell_imports2) == "import datetime\nimport re"

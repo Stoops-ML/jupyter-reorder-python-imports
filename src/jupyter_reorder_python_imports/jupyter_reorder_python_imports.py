@@ -122,7 +122,7 @@ class ReorderPythonImports:
                 cell_content,
                 to_replace=to_replace,
                 to_remove=to_remove,
-            )
+            )[:-1]
         except Exception:
             return
 
