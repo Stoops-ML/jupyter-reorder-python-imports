@@ -1,4 +1,5 @@
 import json
+import sys
 import typing as t
 
 from IPython.core import getipython
@@ -43,7 +44,9 @@ class ReorderPythonImports:
         self.min_python_version = min_python_version
         if self.min_python_version is None:
             versions = sorted(REMOVALS.keys() | REPLACES.keys())
-            self.min_python_version = versions[0]
+            self.min_python_version = (
+                sys.version_info if sys.version_info in versions else (3,)
+            )
 
         self.is_lab = is_lab
         if is_lab:
