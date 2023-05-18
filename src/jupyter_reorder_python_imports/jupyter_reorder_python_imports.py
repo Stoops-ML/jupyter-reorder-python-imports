@@ -124,7 +124,8 @@ class ReorderPythonImports:
         except Exception:
             return
 
-        self._set_cell(formatted_code)
+        if formatted_code != cell_content:
+            self._set_cell(formatted_code)
 
 
 def load_ipython_extension(
