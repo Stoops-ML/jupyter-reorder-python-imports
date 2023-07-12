@@ -23,7 +23,7 @@ class ReorderPythonImports:
         self,
         ip: Ipt,
         is_lab: bool = True,
-        min_python_version: t.Optional[t.Tuple[int]] = None,
+        min_python_version: t.Optional[t.Union[t.Tuple[int], t.Tuple[int, int]]] = None,
     ) -> None:
         """Initialize the class with the passed in config.
         Notes on the JavaScript stuff for notebook:
@@ -42,9 +42,11 @@ class ReorderPythonImports:
         self.min_python_version = min_python_version
         if self.min_python_version is None:
             versions = sorted(REMOVALS.keys() | REPLACES.keys())
-            self.min_python_version = (
-                sys.version_info if sys.version_info in versions else (3,)
-            )
+            self.min_python_version = (sys.version_info.major, sys.version_info.minor)
+            if self.min_python_version not in versions:
+                raise ValueError(
+                    f"Python version {self.min_python_version} is unsupported. Supported versions are {versions}"
+                )
 
         self.is_lab = is_lab
         if is_lab:
@@ -78,8 +80,8 @@ class ReorderPythonImports:
                 }
                 </script>
                 """
-        display(  # type: ignore
-            HTML(js_func),  # type: ignore
+        display(  # type: ignore[no-untyped-call, unused-ignore]
+            HTML(js_func),  # type: ignore[no-untyped-call, unused-ignore]
             display_id="jupyter_reorder_python_imports",
             update=False,
         )
@@ -93,8 +95,8 @@ class ReorderPythonImports:
                 jb_set_cell({json.dumps(cell_content)})
             }})();
             """
-            display(  # type: ignore
-                Javascript(js_code),  # type: ignore
+            display(  # type: ignore[no-untyped-call, unused-ignore]
+                Javascript(js_code),  # type: ignore[no-untyped-call, unused-ignore]
                 display_id="jupyter_reorder_python_imports",
                 update=True,
             )
@@ -153,7 +155,7 @@ def load(
     global formatter
 
     if not ip:
-        ip = getipython.get_ipython()  # type: ignore
+        ip = getipython.get_ipython()  # type: ignore[no-untyped-call, unused-ignore]
     if not ip:
         return
 
@@ -161,7 +163,7 @@ def load(
         formatter = ReorderPythonImports(
             ip, is_lab=lab, min_python_version=min_python_version
         )
-    ip.events.register("pre_run_cell", formatter._format_cell)  # type: ignore
+    ip.events.register("pre_run_cell", formatter._format_cell)  # type: ignore[no-untyped-call, unused-ignore]
 
 
 def unload_ipython_extension(ip: Ipt) -> None:
@@ -172,5 +174,5 @@ def unload_ipython_extension(ip: Ipt) -> None:
     global formatter
 
     if formatter:
-        ip.events.unregister("pre_run_cell", formatter._format_cell)  # type: ignore
+        ip.events.unregister("pre_run_cell", formatter._format_cell)  # type: ignore[no-untyped-call, unused-ignore]
         formatter = None
