@@ -30,14 +30,20 @@ pre-commit = "^3.3.3"
 playwright = "^1.35.0"
 jupyterlab = "^3.0.0"
 pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-testpaths = [
-    "tests",
+testpaths = "tests"
+addopts = [
+    "--cov=jupyter_reorder_python_imports",
+    "--cov-fail-under=85",
+    "--cov-report=term-missing",
+    "--cov-report=term",
+    "--cov-report="
 ]
 
 [tool.tox]
