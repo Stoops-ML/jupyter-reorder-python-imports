@@ -1,6 +1,6 @@
 # install: pre-commit install --hook-type pre-commit --hook-type pre-push
 default_language_version:
-  python: python3.9
+  python: python3.11
 repos:
 -   repo: https://github.com/psf/black
     rev: 23.3.0
