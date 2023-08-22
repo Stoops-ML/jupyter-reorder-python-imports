@@ -1,9 +1,11 @@
 """Tests for jupyter_black running in jupyter lab."""
 import typing as t
 
+import pytest
 from conftest import source_from_cell
 
 
+@pytest.mark.xfail(reason="Playwright ^1.37.0 does not support jupyterlab ^4.0.5")
 def test_load_ext(lab: t.Callable[..., t.Dict[str, t.Any]]) -> None:
     """Test loading with `%load_ext jupyter_reorder_python_imports`"""
     cells = [
