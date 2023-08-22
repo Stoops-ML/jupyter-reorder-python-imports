@@ -61,6 +61,7 @@ isolated_build = true
 [testenv]
 deps =
     pytest
+    pytest-cov
     playwright
     jupyterlab<4
 setenv =
@@ -68,7 +69,7 @@ setenv =
 commands =
     python -c "import sys; print(sys.version_info)"
     python -m playwright install --with-deps firefox
-    python -m pytest --basetemp={envtmpdir} --no-headless
+    python -m pytest --basetemp={envtmpdir} --no-headless --no-cov
 
 [testenv:lint]
 deps =
