@@ -1,6 +1,6 @@
 # install: pre-commit install --hook-type pre-commit --hook-type pre-push
 default_language_version:
-  python: python3.9
+  python: python3.11
 repos:
 -   repo: https://github.com/psf/black
     rev: 23.3.0
@@ -40,14 +40,14 @@ repos:
     rev: v1.2.0
     hooks:
     -   id: mypy
-        files: ^src/ ^tests/
-        args: []
+        files: ^jupyter_reorder_python_imports/ ^tests/
+        args: [ --check-untyped-defs, --disallow-untyped-calls, --disallow-untyped-defs, --follow-imports silent, --ignore-missing-imports, --python-version 3.11, --show-column-numbers, --warn-redundant-casts, --warn-unused-ignores]
 
 - repo: local
   hooks:
       - id: pytest-check
         name: pytest
-        entry: pytest
+        entry: pytest --no-cov
         language: system
         pass_filenames: false
         always_run: true

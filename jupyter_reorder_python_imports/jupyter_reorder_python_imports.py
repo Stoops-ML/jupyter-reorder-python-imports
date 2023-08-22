@@ -1,4 +1,5 @@
 import json
+import sys
 import typing as t
 
 from IPython.core import getipython
@@ -18,35 +19,34 @@ formatter = None
 
 
 class ReorderPythonImports:
-    """Formatter that stores config and call `black.format_cell`."""
-
     def __init__(
         self,
         ip: Ipt,
         is_lab: bool = True,
-        min_python_version: t.Optional[t.Tuple[int]] = None,
+        min_python_version: t.Optional[t.Union[t.Tuple[int], t.Tuple[int, int]]] = None,
     ) -> None:
         """Initialize the class with the passed in config.
         Notes on the JavaScript stuff for notebook:
             - Requires:
                 - update=False for the `html` part
-            - Doesn't seem to matter:
-                - trailing semicolon
             - Other:
                 - Can use `jb_cells.find` instead of the for loop if you set the main function to `text/html` and set `raw=True`
             def display:
                 https://github.com/ipython/ipython/blob/77e188547e5705a0e960551519a851ac45db8bfc/IPython/core/display_functions.py#L88  # noqa
-        Arguments:
-            ip: ipython shell
-            is_lab: whether running in jupyterlab as opposed to ipython
-                notebook
-            black_config: Dictionary for black config options
+        :param t.Optional[Ipt] ip: iPython interpreter, defaults to None
+        :param bool lab: is session jupyterlab, defaults to True
+        :param t.Optional[t.Tuple[int]] min_python_version: minimum python version for reorder-python-imports, defaults to None
         """
+
         self.shell = ip
         self.min_python_version = min_python_version
         if self.min_python_version is None:
             versions = sorted(REMOVALS.keys() | REPLACES.keys())
-            self.min_python_version = versions[0]
+            self.min_python_version = (sys.version_info.major, sys.version_info.minor)
+            if self.min_python_version not in versions:
+                raise ValueError(
+                    f"Python version {self.min_python_version} is unsupported. Supported versions are {versions}"
+                )
 
         self.is_lab = is_lab
         if is_lab:
@@ -80,8 +80,8 @@ class ReorderPythonImports:
                 }
                 </script>
                 """
-        display(  # type: ignore
-            HTML(js_func),  # type: ignore
+        display(  # type: ignore[no-untyped-call, unused-ignore]
+            HTML(js_func),  # type: ignore[no-untyped-call, unused-ignore]
             display_id="jupyter_reorder_python_imports",
             update=False,
         )
@@ -95,8 +95,8 @@ class ReorderPythonImports:
                 jb_set_cell({json.dumps(cell_content)})
             }})();
             """
-            display(  # type: ignore
-                Javascript(js_code),  # type: ignore
+            display(  # type: ignore[no-untyped-call, unused-ignore]
+                Javascript(js_code),  # type: ignore[no-untyped-call, unused-ignore]
                 display_id="jupyter_reorder_python_imports",
                 update=True,
             )
@@ -122,18 +122,20 @@ class ReorderPythonImports:
                 cell_content,
                 to_replace=to_replace,
                 to_remove=to_remove,
-            )
+            )[:-1]
         except Exception:
             return
 
-        self._set_cell(formatted_code)
+        if formatted_code != cell_content:
+            self._set_cell(formatted_code)
 
 
 def load_ipython_extension(
     ip: Ipt,
 ) -> None:
     """Load the extension via `%load_ext jupyter_reorder_python_imports`.
-    https://ipython.readthedocs.io/en/stable/config/extensions/#writing-extensions  # noqa
+
+    :param Ipt ip: iPython interpreter
     """
     load(ip=ip)
 
@@ -143,21 +145,17 @@ def load(
     lab: bool = True,
     min_python_version: t.Optional[t.Tuple[int]] = None,
 ) -> None:
-    """Load the extension via `jupyter_reorder_python_imports.load`.
-    This allows passing in custom configuration.
-    Arguments:
-        ip: iPython interpreter -- you should be able to ignore this
-        lab: Whether this is a jupyterlab session
-        line_length: preferred line length
-        target_version: preferred python version
-        verbosity: logging verbosity
-        **black_config: Other arguments you want to pass to black. See:
-            https://github.com/psf/black/blob/911470a610e47d9da5ea938b0887c3df62819b85/src/black/mode.py#L99
+    """Load the extension using `jupyter_reorder_python_imports.load()`.
+    This allows passing in custom configuration using input arguments.
+
+    :param t.Optional[Ipt] ip: iPython interpreter, defaults to None
+    :param bool lab: is session jupyterlab, defaults to True
+    :param t.Optional[t.Tuple[int]] min_python_version: minimum python version for reorder-python-imports, defaults to None
     """
     global formatter
 
     if not ip:
-        ip = getipython.get_ipython()  # type: ignore
+        ip = getipython.get_ipython()  # type: ignore[no-untyped-call, unused-ignore]
     if not ip:
         return
 
@@ -165,15 +163,16 @@ def load(
         formatter = ReorderPythonImports(
             ip, is_lab=lab, min_python_version=min_python_version
         )
-    ip.events.register("pre_run_cell", formatter._format_cell)  # type: ignore
+    ip.events.register("pre_run_cell", formatter._format_cell)  # type: ignore[no-untyped-call, unused-ignore]
 
 
 def unload_ipython_extension(ip: Ipt) -> None:
-    """Unload the extension.
-    https://ipython.readthedocs.io/en/stable/config/extensions/#writing-extensions
+    """Unload the extension
+
+    :param Ipt ip: iPython interpreter
     """
     global formatter
 
     if formatter:
-        ip.events.unregister("pre_run_cell", formatter._format_cell)  # type: ignore
+        ip.events.unregister("pre_run_cell", formatter._format_cell)  # type: ignore[no-untyped-call, unused-ignore]
         formatter = None

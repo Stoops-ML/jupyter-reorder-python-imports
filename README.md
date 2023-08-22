@@ -1,6 +1,6 @@
 # jupyter-reorder-python-imports
 
-[reorder-python-imports](https://github.com/asottile/reorder-python-imports) is a great library. Now availble in Jupyter notebook and lab.
+[reorder-python-imports](https://github.com/asottile/reorder-python-imports) is a great library. Now available in Jupyter notebook and lab.
 
 ## What does it do?
 Once loaded, automatically format python imports according to reorder-python-imports using their [formatting methods](https://github.com/asottile/reorder-python-imports#what-does-it-do).
@@ -20,11 +20,14 @@ jupyter_reorder_python_imports.load()
 ```
 The latter method allows for specifying the minimum python version (as a tuple of integers) to be used for [removing obsolete `__future__` imports](https://github.com/asottile/reorder-python-imports#removing-obsolete-__future__-imports). For example, `jupyter_reorder_python_imports.load(min_python_version=(3,9))` specifies 3.9 as the minimum python version.
 
-## TODO
-Contribution ideas:
+See the [examples](examples/) folder for some examples.
+
+## Testing
+Tests use playwright. Prior to running the tests execute: `python -m playwright install --with-deps firefox`
+
+If desired, pass the `--no-headless` flag to pytest for local debugging.
+
+## Contributions
+TODO:
 - [ ] Improve testing
-
-## Acknowledgements
-Of course, thanks to the [reorder-python-imports](https://github.com/asottile/reorder-python-imports) and [jupyter](https://jupyter.org/) teams for their continued work that we all use!
-
-Further, thanks to [jupyter-black](https://github.com/n8henrie/jupyter-black) whose code greatly helped this project.
+- [ ] Read configuration from pyproject.toml
