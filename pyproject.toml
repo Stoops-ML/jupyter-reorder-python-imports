@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jupyter-reorder-python-imports"
-version = "0.0.1"
+version = "0.0.2"
 description = "Reorder python imports for Jupyter notebook and lab"
 authors = ["Daniel Stoops <danielstoops25@gmail.com>"]
 maintainers = ["Daniel Stoops <danielstoops25@gmail.com>"]
