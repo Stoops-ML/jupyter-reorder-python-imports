@@ -63,7 +63,7 @@ deps =
     pytest
     pytest-cov
     playwright
-    jupyterlab<4
+    jupyterlab
 setenv =
     PYTHONPATH = {toxinidir}
 commands =
